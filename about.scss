@@ -1,0 +1,158 @@
+$o: 6.25rem;
+$p: 1.1*$o;
+$x: .5*$o;
+$y: .75rem;
+$a: 5deg;
+$t: .5;
+
+html, body, section, article { display: grid }
+
+html { height: 100% }
+
+body {
+	--_mini: var(--mini, 0);
+	--not-mini: calc(1 - var(--_mini));
+	--_narr: var(--narr, 0);
+	--not-narr: calc(1 - var(--_narr));
+	--_wide: var(--wide, 1);
+	--not-wide: calc(1 - var(--_wide));
+	grid-gap: 1em;
+	align-content: center;
+	justify-content: var(--mini, center);
+	margin: 0;
+	padding: calc(var(--_wide)*.5em);
+	background: #212121;
+	color: #ededed;
+	font: clamp(1em, 2.25vw, 1.5em)/ 1.125 ubuntu, 
+		trebuchet ms, verdana, aria, sans-serif;
+	
+	@media (max-width: 45rem) { --wide: 0 }
+	@media (max-width: 33.75rem) { --narr: 1 }
+	@media (max-width: 25rem) { --mini: 1 }
+	
+	@media (max-width: 16.25rem) { font-size: .75em }
+	@media (max-width: 12.5rem) { font-size: .625em }
+}
+
+h1, h2 {
+	grid-row: 1;
+	margin: 0;
+	text-transform: uppercase
+}
+
+h1, section { justify-self: center }
+
+h1 {
+	font: 100 calc((var(--not-mini) + 2)*1em) audiowide, sans-serif }
+
+aside {
+	justify-self: center;
+	padding: .5em;
+	box-shadow: 2px 2px 5px #000;
+	font: 1.25em indie flower, comic sans ms, cursive
+}
+
+pre {
+	margin: .5em 0;
+	font: .875em ubuntu mono, consolas, monaco, monospace
+}
+
+.token {
+	&--tag { color: #fbbe74 }
+	&--func { color: #fc9c9e }
+	&--prop { color: #bfd9ab }
+	&--num { color: #a6b7c9 }
+}
+
+a { color: violet }
+
+section {
+	padding-bottom: 2*$y;
+	width: min(43.75em, 100%);
+	color: #121212;
+	filter: drop-shadow(2px 2px 2.5px #000)
+}
+
+article {
+	--_p: var(--p, 0);
+	--not-p: calc(1 - var(--_p));
+	--sgn-p: calc(2*var(--_p) - 1);
+	box-sizing: border-box;
+	grid-gap: .5em;
+	grid-template-columns: var(--narr, 1fr max-content 1fr);
+	margin: 
+		0 
+		0 
+		-1*$y;
+	padding: 
+		calc(.5em + .75em) 
+		0  
+		calc(.5em + .75em);
+	--shadow: 
+		conic-gradient(from calc(var(--_p)*#{-$a} + var(--sgn-p)*-90deg)
+				at calc(var(--_p)*100% - var(--sgn-p)*var(--_wide)*#{$o}) -3px, 
+			hsla(0, 0%, 0%, calc(var(--not-p)*#{$t})), 
+			hsla(0, 0%, 0%, calc(var(--_p)*#{$t})) #{$a}, 
+				transparent 0%), ;
+	background: 
+		var(--shadow)
+		linear-gradient(calc(var(--sgn-p)*90deg), 
+				var(--c0) $o, var(--c1));
+	clip-path: 
+		polygon(
+			calc(var(--_p)*100%) 50%, 
+			calc(var(--_p)*100% - var(--sgn-p)*var(--_wide)*#{$x}) 0, 
+			calc(var(--not-p)*100% + var(--sgn-p)*var(--_wide)*#{$o}) $y, 
+			calc(var(--not-p)*100% + var(--sgn-p)*var(--_wide)*#{$o}) calc(100% - #{$y}), 
+			calc(var(--_p)*100% - var(--sgn-p)*var(--_wide)*#{$x}) 100%);
+	counter-increment: c;
+	
+	&:first-child { --shadow: ; }
+	&:nth-child(2n) { --p: 1 }
+	
+	&::before, &::after { align-self: center }
+	
+	&:before {
+		grid-column: calc(var(--not-mini)*2 + var(--_mini)*(var(--_p) + 1));
+		grid-row: calc(1 + var(--_mini))/ span calc(2 - var(--_mini));
+		padding: 0 $y;
+		font-size: calc((1.5*var(--not-mini) + 2.5)*1em);
+		text-align: center;
+		content: counter(c, decimal-leading-zero)
+	}
+	
+	&::after {
+		grid-row: calc(1 + var(--_mini))/ span calc(2 - var(--_mini));
+		grid-column: calc((1 + var(--not-mini))*var(--not-p) + 1);
+		padding: 
+			0 
+			calc(var(--not-p)*var(--_wide)*#{$o} + #{$y}) 
+			0 
+			calc(var(--_p)*var(--_wide)*#{$o} + #{$y}) ;
+		font-size: calc((var(--not-mini)*.75 + 1.75)*1em);
+		text-align: var(--p, right);
+		filter: brightness(0) invert(.0625);
+		content: attr(data-icon)
+	}
+}
+
+h2, p {
+	--pad: calc(var(--not-mini)*(var(--_wide)*#{$o} + var(--not-wide)*#{$y}));
+	--ini: calc(var(--_mini)*.25rem);
+	grid-column-end: span calc(1 + var(--_mini));
+	padding: 
+		var(--ini) 
+		calc(var(--_p)*var(--pad) + var(--ini))
+		var(--ini) 
+		calc(var(--not-p)*var(--pad) + var(--ini));
+}
+
+h2 {
+	font-size: 1.25em;
+	font-weight: 400
+}
+
+p {
+	grid-row: calc(2 + var(--_mini));
+	margin: 0
+}
